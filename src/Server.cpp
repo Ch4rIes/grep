@@ -1,11 +1,29 @@
 #include <iostream>
 #include <string>
 
+void throw_not_find_pattern() { throw std::runtime_error("Unhandled pattern"); }
+
+bool check_is_single_index(const std::string &input,
+                           const std::string &pattern) {
+  return input == pattern;
+}
+
+bool check_is_digit(const std::string &input) {
+  if (input.size() == 1) {
+    return input[0] <= '9' && input[0] >= '0';
+  } else {
+    return false;
+  }
+}
+
 bool match_pattern(const std::string &input_line, const std::string &pattern) {
   if (pattern.length() == 1) {
     return input_line.find(pattern) != std::string::npos;
+  } else if (pattern[0] == '\\') {
+    return check_is_digit(input_line);
   } else {
-    throw std::runtime_error("Unhandled pattern " + pattern);
+    throw_not_find_pattern();
+    return false;
   }
 }
 
@@ -32,7 +50,7 @@ int main(int argc, char *argv[]) {
 
   try {
     if (match_pattern(input_line, pattern)) {
-      // std::cout << "Pattern Find" << std::endl;
+      std::cout << "Pattern Find" << std::endl;
       return 0;
     } else {
       return 1;
