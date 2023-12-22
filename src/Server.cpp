@@ -57,9 +57,20 @@ bool match_pattern(const std::string &input_line , const std::string &pattern) {
         std::set<char> legal_letters = generate_group(pattern);
         legal_letters.erase('[');
         legal_letters.erase(']');
-        for (auto character: input_line) {
-            if (check_is_in_character_group(character , legal_letters)) {
-                return true;
+
+        if (pattern[1] == '^') {
+            legal_letters.erase('^');
+            for (auto character: input_line) {
+                if (!check_is_in_character_group(character , legal_letters)) {
+                    return true;
+                }
+            }
+            return false;
+        } else {
+            for (auto character: input_line) {
+                if (check_is_in_character_group(character , legal_letters)) {
+                    return true;
+                }
             }
         }
     } else {
