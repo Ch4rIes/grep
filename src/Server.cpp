@@ -19,8 +19,14 @@ bool check_is_digit(const std::string &input) {
 bool match_pattern(const std::string &input_line, const std::string &pattern) {
   if (pattern.length() == 1) {
     return input_line.find(pattern) != std::string::npos;
-  } else if (pattern[0] == '\\') {
-    return check_is_digit(input_line);
+  } else if (pattern == "\\d") {
+    // check if there is a single digit from the input line
+    for (auto character : input_line) {
+      if (check_is_digit(std::string{character})) {
+        return true;
+      }
+    }
+    return false;
   } else {
     throw_not_find_pattern();
     return false;
