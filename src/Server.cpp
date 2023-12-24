@@ -53,7 +53,11 @@ bool check_pattern(const std::string &input_line, const std::string &pattern) {
         input_index += 1;
     }
     //if input and pattern are both fully matched, we return true
-    return pattern_index == pattern.size() && input_index <= input_line.size();
+    if( pattern_index == pattern.size() && input_index <= input_line.size()) {
+        std::cout << input_line.substr(0, input_index) << std::endl;
+        return true;
+    }
+    return false;
 }
 
 //check if a sub-string of the input line contains the given pattern
@@ -92,6 +96,11 @@ int main(int argc, char *argv[]) {
         if (pattern[0] == '^') {
             //string anchor case: only matching the entire line
             if (check_pattern(input_line, pattern.substr(1))) {
+                return 0;
+            }
+            return 1;
+        }else if (pattern[pattern.size() - 1] == '$') {
+            if (check_pattern(input_line.substr(input_line.size() - pattern.substr(1).size()), pattern.substr(0, pattern.size()-1))) {
                 return 0;
             }
             return 1;
