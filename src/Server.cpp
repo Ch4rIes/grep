@@ -30,13 +30,14 @@ std::set<char> generate_group(const std::string &group) {
     std::set<char> legal_letters;
     for (char letter: group) {
         legal_letters.insert(letter);
+        //std::cout << letter << std::endl;
     }
     return legal_letters;
 }
 
 
 //match pattern element by element
-bool match_pattern(const std::string &input_line, const std::string &pattern) {
+bool check_pattern(const std::string &input_line, const std::string &pattern) {
     int pattern_index = 0, input_index = 0;
 
     while (pattern_index < pattern.size() && input_index < input_line.size()) {
@@ -70,7 +71,7 @@ bool match_pattern(const std::string &input_line, const std::string &pattern) {
                     return false;
                 }
             }else {
-                if (letters.count(input_line[input_index])) {
+                if (!letters.count(input_line[input_index])) {
                     return false;
                 }
             }
@@ -84,9 +85,18 @@ bool match_pattern(const std::string &input_line, const std::string &pattern) {
         input_index += 1;
     }
     //if input and pattern are both fully matched, we return true
-    return pattern_index == pattern.size() && input_index < input_line.size();
+    return pattern_index == pattern.size() && input_index <= input_line.size();
 }
 
+//check if a sub-string of the input line contains the given pattern
+bool match_pattern(const std::string &input_line, const std::string &pattern) {
+    for (int i = 0 ; i < input_line.size() ; i++) {
+        if (check_pattern(input_line.substr(i) , pattern)) {
+            return true;
+        }
+    }
+    return false;
+}
 
 
 int main(int argc, char *argv[]) {
