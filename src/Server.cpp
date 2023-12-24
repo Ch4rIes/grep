@@ -89,8 +89,13 @@ int main(int argc, char *argv[]) {
     std::getline(std::cin, input_line);
 
     try {
-        if (match_pattern(input_line, pattern)) {
-            std::cout << "Pattern Find" << std::endl;
+        if (pattern[0] == '^') {
+            //string anchor case: only matching the entire line
+            if (check_pattern(input_line, pattern.substr(1))) {
+                return 0;
+            }
+            return 1;
+        }else if (match_pattern(input_line, pattern)) {
             return 0;
         } else {
             return 1;
