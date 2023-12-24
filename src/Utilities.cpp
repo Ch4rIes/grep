@@ -1,3 +1,6 @@
+#include "Utilities.h"
+
+
 void throw_not_find_pattern() { throw std::runtime_error("Unhandled pattern"); }
 
 bool check_is_single_index(const std::string &input,
