@@ -84,7 +84,7 @@ bool match_pattern(const std::string &input_line, const std::string &pattern) {
         input_index += 1;
     }
     //if input and pattern are both fully matched, we return true
-    return pattern_index == pattern.size() && input_index == input_line.size();
+    return pattern_index == pattern.size() && input_index < input_line.size();
 }
 
 
