@@ -48,9 +48,10 @@ bool check_pattern(std::string input_line,
     if (nxt_pattern_element == "+") {
         //after first match, we can replace + with *
         pattern[pattern_index] = '*';
+        std::cout << pattern << std::endl;
         if (check_pattern(input_line, pattern,
                       input_index + 1,
-                      pattern_index + 1))
+                      pattern_index-cur_pattern_element.size()))
             return true;
     }
 
