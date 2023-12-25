@@ -34,6 +34,8 @@ bool check_pattern(std::string input_line,
         pattern_index += 2;
         if (!check_slash_pattern(cur_pattern_element, input_line[input_index]))
             return false;
+    }else if (pattern[pattern_index] == '.') { //always match
+        pattern_index +=1;
     } else if (pattern[pattern_index] == '[') { //match from given group of characters
         pattern_index += cur_pattern_element.size();
         if (!check_bracket_group_pattern(cur_pattern_element, input_line[input_index]))
