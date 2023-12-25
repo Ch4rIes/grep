@@ -23,7 +23,7 @@ bool check_pattern(std::string input_line,
     std::cout << cur_pattern_element << " " << nxt_pattern_element << std::endl;
 
     // we check if the next pattern element is '+' or '*'
-    if (nxt_pattern_element == "*") {
+    if (nxt_pattern_element == "*" || nxt_pattern_element == "?") {
         if (check_pattern(input_line, pattern,
                           input_index,
                           pattern_index + cur_pattern_element.size() + nxt_pattern_element.size()))
