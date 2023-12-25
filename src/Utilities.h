@@ -18,6 +18,9 @@ bool check_is_alphanumeric(char input);
 
 bool check_is_in_character_group(char input, std::set<char> group);
 
+string next_pattern_element(const std::string &pattern,
+                            int pattern_index);
+
 
 std::set<char> generate_group(const std::string &group);
 

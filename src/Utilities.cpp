@@ -24,6 +24,29 @@ bool check_is_in_character_group(char input, std::set<char> group) {
     return group.count(input);
 }
 
+//EFFECTS: return the next single element in pattern
+//         return "" if no more elements
+string next_pattern_element(const std::string &pattern,
+                            int pattern_index){
+    if (pattern_index == pattern.size()) {
+        //no more element
+        return "";
+    }
+    if (pattern[pattern_index] == '\\') {
+        return pattern.substr(pattern_index , 2);
+    } else if (pattern[pattern_index] == '[') {
+        int end_element = pattern;
+        int cnt = 1;
+        while (pattern[end_element] != ']') {
+            end_element += 1;
+            cnt += 1;
+        }
+        return pattern.substr(pattern_index , cnt);
+    } else {
+        return pattern.substr(pattern_index , 1);
+    }
+}
+
 
 std::set<char> generate_group(const std::string &group) {
     std::set<char> legal_letters;
