@@ -16,11 +16,20 @@ bool check_is_letter(char input);
 
 bool check_is_alphanumeric(char input);
 
+//parse a segment of string surrounded by bracket and return a set
 bool check_is_in_character_group(char input, std::set<char> group);
 
-string next_pattern_element(const std::string &pattern,
+//return the next element int the pattern
+std::string next_pattern_element(const std::string &pattern,
                             int pattern_index);
 
+//check if input char is in numeric/alphanumeric character set
+bool check_slash_pattern(const std::string &cur_pattern_element,
+                         char input_char);
+
+//parse character set to predicate and return either input char is in/not-in the character set
+bool check_bracket_group_pattern(const std::string &cur_pattern_element,
+                         char input_char);
 
 std::set<char> generate_group(const std::string &group);
 

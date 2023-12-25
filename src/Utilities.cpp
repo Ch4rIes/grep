@@ -26,7 +26,7 @@ bool check_is_in_character_group(char input, std::set<char> group) {
 
 //EFFECTS: return the next single element in pattern
 //         return "" if no more elements
-string next_pattern_element(const std::string &pattern,
+std::string next_pattern_element(const std::string &pattern,
                             int pattern_index){
     if (pattern_index == pattern.size()) {
         //no more element
@@ -35,7 +35,7 @@ string next_pattern_element(const std::string &pattern,
     if (pattern[pattern_index] == '\\') {
         return pattern.substr(pattern_index , 2);
     } else if (pattern[pattern_index] == '[') {
-        int end_element = pattern;
+        int end_element = pattern_index;
         int cnt = 1;
         while (pattern[end_element] != ']') {
             end_element += 1;
@@ -45,6 +45,41 @@ string next_pattern_element(const std::string &pattern,
     } else {
         return pattern.substr(pattern_index , 1);
     }
+}
+
+bool check_slash_pattern(const std::string &cur_pattern_element,
+                         char input_char) {
+    if (cur_pattern_element == "\\d") {
+        if (!check_is_digit(input_char)) {
+            return false;
+        }
+    } else if (cur_pattern_element == "\\w") {
+        if (!check_is_alphanumeric(input_char)) {
+            return false;
+        }
+    } else {
+        throw_not_find_pattern();
+    }
+
+    return true;
+}
+
+
+bool check_bracket_group_pattern(const std::string &cur_pattern_element,
+                                char input_char) {
+    std::set<char> letters = generate_group(cur_pattern_element);
+    letters.erase('[');
+    letters.erase(']');
+    if (letters.count('^')) {
+        if (letters.count(input_char)) {
+            return false;
+        }
+    } else {
+        if (!letters.count(input_char)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 

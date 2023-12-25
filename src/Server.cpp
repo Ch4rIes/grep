@@ -5,69 +5,65 @@
 
 
 //checking if the input fits pattern recursively
-bool check_pattern(const std::string &input_line,
-                   const std::string &pattern,
+bool check_pattern(std::string input_line,
+                   std::string pattern,
                    int input_index,
                    int pattern_index) {
     //TODO: refactor the loop into recursion
 
+    //std::cout << input_line[input_index] << " " << pattern[pattern_index] << std::endl;
     if (input_index <= input_line.size() && pattern_index == pattern.size()) {
         //matched
-        std::cout << input_line.substr(0, input_index) << std::endl;
         return true;
     }
 
+    std::string cur_pattern_element = next_pattern_element(pattern, pattern_index);
+    std::string nxt_pattern_element = next_pattern_element(pattern, pattern_index + cur_pattern_element.size());
 
-    if (pattern[pattern_index] == '\\') {
-        //special character set handle
-        std::string character_type = pattern.substr(pattern_index, 2);
-        pattern_index += 1;
+    std::cout << cur_pattern_element << " " << nxt_pattern_element << std::endl;
 
-        if (pattern_index + 1 < pattern.size() && pattern[pattern_index + 1] == '*') {
-            //means this element can either be matched zero or more times
+    // we check if the next pattern element is '+' or '*'
+    if (nxt_pattern_element == "*") {
+        if (check_pattern(input_line, pattern,
+                          input_index,
+                          pattern_index + cur_pattern_element.size() + nxt_pattern_element.size()))
+            return true;
+    }
 
-        }
-
-        if (character_type == "\\d") {
-            if (!check_is_digit(input_line[input_index])) {
-                return false;
-            }
-        } else if (character_type == "\\w") {
-            if (!check_is_alphanumeric(input_line[input_index])) {
-                return false;
-            }
-        } else {
-            throw_not_find_pattern();
-        }
-    } else if (pattern[pattern_index] == '[') {
-        //match from given group of characters
-        std::string segment = "";
-        while (pattern[pattern_index] != ']') {
-            segment += pattern[pattern_index];
-            pattern_index += 1;
-        }
-        std::set<char> letters = generate_group(segment);
-        letters.erase('[');
-        letters.erase(']');
-        if (letters.count('^')) {
-            if (letters.count(input_line[input_index])) {
-                return false;
-            }
-        } else {
-            if (!letters.count(input_line[input_index])) {
-                return false;
-            }
-        }
-    } else {
-        //compare if the character is the same
-        if (pattern[pattern_index] != input_line[input_index]) {
+    if (pattern[pattern_index] == '\\') { //special character set handle
+        pattern_index += 2;
+        if (!check_slash_pattern(cur_pattern_element, input_line[input_index]))
             return false;
-        }
+    } else if (pattern[pattern_index] == '[') { //match from given group of characters
+        pattern_index += cur_pattern_element.size();
+        if (!check_bracket_group_pattern(cur_pattern_element, input_line[input_index]))
+            return false;
+    } else { //compare if the character is the same
+        pattern_index += 1;
+        if (pattern[pattern_index] != input_line[input_index])
+            return false;
     }
 
 
-    return check_pattern(input_line, pattern, input_index + 1, pattern_index + 1);
-    //TODO: add for + / * pattern matching
+    if (nxt_pattern_element == "+") {
+        //after first match, we can replace + with *
+        pattern[pattern_index] = '*';
+        if (check_pattern(input_line, pattern,
+                      input_index + 1,
+                      pattern_index + 1))
+            return true;
+    }
+
+    if (nxt_pattern_element == "+" || nxt_pattern_element == "*") {
+        return check_pattern(input_line, pattern,
+                             input_index + 1,
+                             pattern_index + nxt_pattern_element.size());
+    } else {
+        return check_pattern(input_line, pattern,
+                             input_index + 1,
+                             pattern_index);
+    }
+
 }
 
 
@@ -130,7 +126,7 @@ bool check_pattern(const std::string &input_line, const std::string &pattern) {
 //check if a sub-string of the input line contains the given pattern
 bool match_pattern(const std::string &input_line, const std::string &pattern) {
     for (int i = 0; i < input_line.size(); i++) {
-        if (check_pattern(input_line.substr(i), pattern, 0 , 0)) {
+        if (check_pattern(input_line.substr(i), pattern, 0, 0)) {
             return true;
         }
     }
@@ -162,18 +158,20 @@ int main(int argc, char *argv[]) {
     try {
         if (pattern[0] == '^') {
             //string anchor case: only matching the entire line
-            if (check_pattern(input_line, pattern.substr(1) , 0 , 0)) {
+            if (check_pattern(input_line, pattern.substr(1), 0, 0)) {
+                std::cout << "MATCHED" << std::endl;
                 return 0;
             }
             return 1;
         } else if (pattern[pattern.size() - 1] == '$') {
             if (check_pattern(input_line.substr(input_line.size() - pattern.substr(1).size()),
-                              pattern.substr(0, pattern.size() - 1)
-                              , 0 , 0)) {
+                              pattern.substr(0, pattern.size() - 1), 0, 0)) {
+                std::cout << "MATCHED" << std::endl;
                 return 0;
             }
             return 1;
         } else if (match_pattern(input_line, pattern)) {
+            std::cout << "MATCHED" << std::endl;
             return 0;
         } else {
             return 1;
