@@ -11,7 +11,7 @@ bool check_pattern(std::string input_line,
                    int pattern_index) {
     //TODO: refactor the loop into recursion
 
-    //std::cout << input_line[input_index] << " " << pattern[pattern_index] << std::endl;
+    std::cout << input_index << " " << pattern_index << std::endl;
     if (input_index <= input_line.size() && pattern_index == pattern.size()) {
         //matched
         return true;
@@ -39,9 +39,9 @@ bool check_pattern(std::string input_line,
         if (!check_bracket_group_pattern(cur_pattern_element, input_line[input_index]))
             return false;
     } else { //compare if the character is the same
-        pattern_index += 1;
         if (pattern[pattern_index] != input_line[input_index])
             return false;
+        pattern_index += 1;
     }
 
 
@@ -59,6 +59,7 @@ bool check_pattern(std::string input_line,
                              input_index + 1,
                              pattern_index + nxt_pattern_element.size());
     } else {
+
         return check_pattern(input_line, pattern,
                              input_index + 1,
                              pattern_index);

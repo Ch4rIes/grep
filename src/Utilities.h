@@ -33,4 +33,5 @@ bool check_bracket_group_pattern(const std::string &cur_pattern_element,
 
 std::set<char> generate_group(const std::string &group);
 
+
 #endif //INC_91CE01D83F783997_UTILITIES_H
