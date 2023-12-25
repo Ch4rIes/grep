@@ -55,7 +55,7 @@ bool check_pattern(std::string input_line,
             return true;
     }
 
-    if (nxt_pattern_element == "+" || nxt_pattern_element == "*") {
+    if (nxt_pattern_element == "+" || nxt_pattern_element == "*" || nxt_pattern_element == "?") {
         return check_pattern(input_line, pattern,
                              input_index + 1,
                              pattern_index + nxt_pattern_element.size());
