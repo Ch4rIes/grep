@@ -4,6 +4,8 @@
 #include "Utilities.h"
 
 
+
+
 //checking if the input fits pattern recursively
 bool check_pattern(std::string input_line,
                    std::string pattern,
@@ -34,13 +36,24 @@ bool check_pattern(std::string input_line,
         pattern_index += 2;
         if (!check_slash_pattern(cur_pattern_element, input_line[input_index]))
             return false;
-    }else if (pattern[pattern_index] == '.') { //always match
+    } else if (pattern[pattern_index] == '.') { //always match
         pattern_index +=1;
     } else if (pattern[pattern_index] == '[') { //match from given group of characters
         pattern_index += cur_pattern_element.size();
         if (!check_bracket_group_pattern(cur_pattern_element, input_line[input_index]))
             return false;
-    } else { //compare if the character is the same
+    } else if (pattern[pattern_index] == '(') { //match segment with different options
+        std::set<std::string> alternation_options = generate_options(cur_pattern_element);
+        //each time we replace the substring of the options by just the pattern itself
+        for (std::string option : alternation_options) {
+            if (check_pattern(input_line,
+                              pattern.substr(0,pattern_index) + option + pattern.substr(pattern_index + cur_pattern_element.size()),
+                              input_index,
+                              pattern_index))
+                return true;
+        }
+        return false;
+    }else { //compare if the character is the same
         if (pattern[pattern_index] != input_line[input_index])
             return false;
         pattern_index += 1;
@@ -70,62 +83,6 @@ bool check_pattern(std::string input_line,
 
 }
 
-
-//match pattern element by element
-bool check_pattern(const std::string &input_line, const std::string &pattern) {
-    int pattern_index = 0, input_index = 0;
-
-    while (pattern_index < pattern.size() && input_index < input_line.size()) {
-        if (pattern[pattern_index] == '\\') {
-            //special character set handle
-            std::string character_type = pattern.substr(pattern_index, 2);
-            pattern_index += 1;
-            if (character_type == "\\d") {
-                if (!check_is_digit(input_line[input_index])) {
-                    return false;
-                }
-            } else if (character_type == "\\w") {
-                if (!check_is_alphanumeric(input_line[input_index])) {
-                    return false;
-                }
-            } else {
-                throw_not_find_pattern();
-            }
-        } else if (pattern[pattern_index] == '[') {
-            //match from given group of characters
-            std::string segment = "";
-            while (pattern[pattern_index] != ']') {
-                segment += pattern[pattern_index];
-                pattern_index += 1;
-            }
-            std::set<char> letters = generate_group(segment);
-            letters.erase('[');
-            letters.erase(']');
-            if (letters.count('^')) {
-                if (letters.count(input_line[input_index])) {
-                    return false;
-                }
-            } else {
-                if (!letters.count(input_line[input_index])) {
-                    return false;
-                }
-            }
-        } else {
-            //compare if the character is the same
-            if (pattern[pattern_index] != input_line[input_index]) {
-                return false;
-            }
-        }
-        pattern_index += 1;
-        input_index += 1;
-    }
-    //if input and pattern are both fully matched, we return true
-    if (pattern_index == pattern.size() && input_index <= input_line.size()) {
-        std::cout << input_line.substr(0, input_index) << std::endl;
-        return true;
-    }
-    return false;
-}
 
 //check if a sub-string of the input line contains the given pattern
 bool match_pattern(const std::string &input_line, const std::string &pattern) {

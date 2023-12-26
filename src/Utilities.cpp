@@ -42,6 +42,14 @@ std::string next_pattern_element(const std::string &pattern,
             cnt += 1;
         }
         return pattern.substr(pattern_index , cnt);
+    } else if (pattern[pattern_index] == '(') {
+        int end_element = pattern_index;
+        int cnt = 1;
+        while (pattern[end_element] != ')') {
+            end_element += 1;
+            cnt += 1;
+        }
+        return pattern.substr(pattern_index , cnt);
     } else {
         return pattern.substr(pattern_index , 1);
     }
@@ -82,7 +90,6 @@ bool check_bracket_group_pattern(const std::string &cur_pattern_element,
     return true;
 }
 
-
 std::set<char> generate_group(const std::string &group) {
     std::set<char> legal_letters;
     for (char letter: group) {
@@ -90,4 +97,18 @@ std::set<char> generate_group(const std::string &group) {
         //std::cout << letter << std::endl;
     }
     return legal_letters;
+}
+
+std::set<std::string> generate_options(std::string group) {
+    std::set<std::string> options;
+    group = group.substr(0,group.size()-1);
+    group = group.substr(1);
+    int index = group.find('|');
+    while (index != std::string::npos) {
+        options.insert(group.substr(0, index));
+        group = group.substr(index + 1);
+        index = group.find('|');
+    }
+    options.insert(group);
+    return options;
 }
