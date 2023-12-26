@@ -1,13 +1,9 @@
-[![progress-banner](https://backend.codecrafters.io/progress/grep/7734be26-d892-49c0-910f-052fe78180a3)](https://app.codecrafters.io/users/codecrafters-bot?r=2qF)
+#Mini Grep CLI Tool
+
+Mini Grep is a command-line interface (CLI) tool designed for searching plain-text data sets for lines that match a regular expression. Its functionality is inspired by the traditional Unix grep command but focuses on simplicity and ease of use for beginners and experienced users alike.
+
+Features
+Regular Expression Support: Use powerful regular expressions to describe complex search patterns.
 
 My solution for C++ solutions to the
 ["Build Your Own grep" Challenge](https://app.codecrafters.io/courses/grep/overview).
-
-[Regular expressions](https://en.wikipedia.org/wiki/Regular_expression)
-(Regexes, for short) are patterns used to match character combinations in
-strings. [`grep`](https://en.wikipedia.org/wiki/Grep) is a CLI tool for
-searching using Regexes.
-
-In this challenge you'll build your own implementation of `grep`. Along the way
-we'll learn about Regex syntax, how parsers/lexers work, and how regular
-expressions are evaluated.
